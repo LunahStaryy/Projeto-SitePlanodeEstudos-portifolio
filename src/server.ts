@@ -2,6 +2,7 @@ import start from "./index.html"
 import home from "./home.html"
 import { db } from "./db.ts"
 
+const loggedUsers: any = {}
 
 const srv = Bun.serve({
     port: 3000,
@@ -10,6 +11,42 @@ const srv = Bun.serve({
         "/": start,
 
         "/home": home,
+
+        "/login": {
+            POST: async (req) => {
+                const body = await req.body?.json()
+                const query = db.query(`SELECT * FROM users WHERE email=:email LIMIT 1`)
+                const data: any = query.get({ ":email": body.email })
+                if (!data)
+                    return Response.json({ msg: "usuário não encontrado" }, { status: 404 })
+                const hash = data.password_hash
+                const isMatch = await Bun.password.verify(body.password, hash)
+                if (!isMatch)
+                    return Response.json({ msg: "senha incorreta" }, { status: 401 })
+                const uuid = crypto.randomUUID()
+                delete data.password_hash
+                loggedUsers[uuid] = data
+                req.cookies.set("ses", uuid)
+                return Response.json(isMatch)
+            }
+        },
+
+        "/logout": {
+            GET: (req) => {
+                const ses = req.cookies.get("ses") as string
+                delete loggedUsers[ses]
+                req.cookies.delete("ses")
+                return Response.json(null, { status: 204 })
+            }
+        },
+
+        "/login/user": (req) => {
+            const ses = req.cookies.get("ses") as string
+            const data = loggedUsers[ses]
+            if (!ses || !data)
+                return Response.json({ msg: "usuário não esta logado" }, { status: 401 })
+            return Response.json(data)
+        },
 
         "/user": {
             GET: () => {
@@ -20,7 +57,7 @@ const srv = Bun.serve({
 
             POST: async (req) => {
                 const body = await req.body?.json()
-                const query = db.query(`VALUES(:username, :email, :password_hash)`)
+                const query = db.query(`INSERT INTO users VALUES(null, :username, :email, :password_hash)`)
                 const hash = await Bun.password.hash(body.password)
                 const dbResp = query.run({
                     ':username': body.username,
@@ -34,40 +71,43 @@ const srv = Bun.serve({
 
             },
         },
-        /*
-                "/user/:id": {
-                    GET: (req) => {
-                        const id = req.params.id
-                        const query = db.query(`SELECT * FROM users WHERE id=:id`)
-                        const data = query.get({ ':id': id })
-                        return Response.json(data)
-                    },
-        
-                    PUT: async (req) => {
-                        const body = await req.body?.json()
-                        const query = db.query(`UPDATE users SET username = :username, email = :email, password_hash = :password WHERE id = :id`)
-                        const dbResp = query.run({
-                            ':username': body.username,
-                            ':email': body.email,
-                            ':password': body.password,
-                            ':id': req.params.id
-                        })
-                        return Response.json(dbResp)
-                    },
-        
-                    DELETE: (req) => {
-                        const query = db.query(`DELETE FROM users WHERE id=:id`)
-                        const data = query.run({ ':id': req.params.id })
-                        return Response.json(data)
-                    },
-                },
-        
-                */
+
+        "/user/:id": {
+
+            GET: (req) => {
+                const id = req.params.id
+                const query = db.query(`SELECT * FROM users WHERE id=:id`)
+                const data = query.get({ ':id': id })
+                return Response.json(data)
+            },
+
+            PUT: async (req) => {
+                const body = await req.body?.json()
+                const query = db.query(`UPDATE users SET username = :username, email = :email, password_hash = :password WHERE id = :id`)
+                const dbResp = query.run({
+                    ':username': body.username,
+                    ':email': body.email,
+                    ':password': body.password,
+                    ':id': req.params.id
+                })
+                return Response.json(dbResp)
+            },
+
+            DELETE: (req) => {
+                const query = db.query(`DELETE FROM users WHERE id=:id`)
+                const data = query.run({ ':id': req.params.id })
+                return Response.json(data)
+            },
+        },
 
         "/plano": {
             GET: () => {
                 const query = db.query(`SELECT * FROM plano`)
                 const data = query.all()
+                if (!data) {
+                    return Response.json({ msg: "usuário não cadastrado" }, { status: 404 })
+
+                }
                 return Response.json(data)
             },
 

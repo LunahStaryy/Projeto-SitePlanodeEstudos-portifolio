@@ -26,9 +26,13 @@
 
         const formCadastro = document.querySelector("#formCadastro")
         const formLogin = document.querySelector("#formLogin")
+
         // cadastro
         formCadastro.addEventListener("submit", async (ev) => {
             ev.preventDefault()
+
+            if (!formCadastro.username.value.trim() || !formCadastro.password.value.trim() || !formCadastro.email.value.trim())
+                alert("Campo vazio!")
 
             const response = await fetch("user", {
                 method: "POST",
@@ -38,7 +42,46 @@
                     "email": formCadastro.email.value
                 })
             })
+            if (response.ok) {
+                formCadastro.reset()
+                return alert("Usuário cadastradoo!! :3")
+            }
+            alert("Algo deu errado.")
         })
+
+
+        formLogin.addEventListener("submit", async (ev) => {
+            ev.preventDefault()
+
+
+            if (!formLogin.email.value.trim() || !formLogin.password.value.trim())
+                return alert("Campo vazio!")
+
+            const response = await fetch("login", {
+                method: "POST",
+                body: JSON.stringify({
+                    "password": formLogin.password.value,
+                    "email": formLogin.email.value
+                })
+            })
+
+            if (response.status == 404) {
+                alert("Usuário não existente")
+                return
+            }
+            if (response.status == 401) {
+                alert("Senha Incorreta")
+                return
+            }
+
+            if (response.ok) {
+                window.location.href = "/home"
+                return
+            }
+            alert("Algo deu errado.")
+        })
+
+
     </script>
 
 </body>

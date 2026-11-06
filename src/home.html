@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +9,41 @@
 
 
 <body>
-    
-<p>Bem vindo!! :D</p>
 
-<button id="btmPlanos">Acessar Planos</button>
+    <p>Bem vindo!! :D</p>
 
+    <div class="profile">
+        <span class="username"></span>
+    </div>
 
+    <button id="btmPlanos">Acessar Planos</button>
+
+    <button id="logout">Log Out</button>
+
+    <script>
+
+        const logoutBotao = document.querySelector("#logout")
+        logoutBotao.addEventListener('click', async () => {
+            const response = await fetch("/logout")
+            if (response.status == 204) {
+                alert("Usuário Deslogado")
+                window.location.href = "/"
+                return
+            }
+        })
+
+        async function init() {
+            const response = await fetch("/login/user")
+            if (!response.ok) {
+                alert("Usuário não logado")
+                window.location.href = "/"
+                return
+            }
+            const data = await response.json()
+            document.querySelector(".profile .username").textContent = data.username
+        }
+        init()
+    </script>
 
 
 </body>
