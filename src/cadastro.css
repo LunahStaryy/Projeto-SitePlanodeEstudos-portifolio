@@ -1,0 +1,61 @@
+/* 
+vmin
+vmax
+vh
+vw 
+%
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    background-color: rgb(176, 226, 255)
+}
+
+#inicio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20%;
+}
+
+#inicio > * {
+    transform-origin: center center; 
+    display: flex;
+    flex-direction: row;
+}
+
+#phone {
+    width: 40vw;
+    height: 80vh;
+    background: #007bff;
+    display: grid;
+    place-items: center;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+
+#form-container > * {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+#form-container > * > * {
+    font-size: 200%;
+}
+
+#form-container[data-open="cad"] > #formCadastro ,
+#form-container[data-open="log"] > #formLogin {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+}

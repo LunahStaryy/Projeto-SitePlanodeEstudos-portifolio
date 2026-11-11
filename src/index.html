@@ -5,27 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PáginaInicial</title>
+    <link rel="stylesheet" href="cadastro.css">
 </head>
 
 <body>
+    <div id="inicio">
+        <button id="btnCad">Cadastrar</button>
+        <button id="btnLog">Logar</button>
+    </div>
+    <div id="phone">
+        <div id="form-container" data-open="log">
+            <form id="formCadastro">
+                <input type="text" name="username" placeholder="nome de usuário">
+                <input type="text" name="email" placeholder="email de login">
+                <input type="password" name="password" placeholder="senha">
+                <button>Cadastrar-se</button>
+            </form>
 
-    <form id="formCadastro">
-        <input type="text" name="username" placeholder="nome de usuário">
-        <input type="text" name="email" placeholder="email de login">
-        <input type="password" name="password" placeholder="senha">
-        <button>Cadastrar-se</button>
-    </form>
-
-    <form id="formLogin">
-        <input type="text" name="email" placeholder="email de login">
-        <input type="password" name="password" placeholder="senha">
-        <button>Entrar</button>
-    </form>
+            <form id="formLogin">
+                <input type="text" name="email" placeholder="email de login">
+                <input type="password" name="password" placeholder="senha">
+                <button>Entrar</button>
+            </form>
+        </div>
+    </div>
 
     <script>
 
         const formCadastro = document.querySelector("#formCadastro")
         const formLogin = document.querySelector("#formLogin")
+        const inicio = document.getElementById("inicio")
+        const phone = document.getElementById("phone")
+        const frmContainer = document.querySelector("#form-container")
+
+        const entrarCad = document.getElementById("btnCad")
+        const entrarLog = document.getElementById("btnLog")
+
+        entrarCad.addEventListener('click', () => frmContainer.dataset.open = "cad")
+        entrarLog.addEventListener('click', () => frmContainer.dataset.open = "log")
+
+
+
+
+
+
+
+
 
         // cadastro
         formCadastro.addEventListener("submit", async (ev) => {
