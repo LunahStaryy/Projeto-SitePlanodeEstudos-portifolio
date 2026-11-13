@@ -5,20 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="home.css">
 </head>
 
 
 <body>
+    <div id="tela1">
 
-    <p>Bem vindo!! :D</p>
+        <div id="header">
+            <p>Seja bem vindo, <span class="username"></span>!</p>
+        </div>
 
-    <div class="profile">
-        <span class="username"></span>
+    </div>
+    <div id="opcoes-container">
+        <div id="menu">
+            <button id="btmPlanos">Acessar Planos</button>
+            <button id="logout">Log Out</button>
+        </div>
+        <div id="planosExistentes">
+            placeholder
+        </div>
     </div>
 
-    <button id="btmPlanos">Acessar Planos</button>
 
-    <button id="logout">Log Out</button>
+    </div>
+
+
+
+
+
+
 
     <script>
 
@@ -40,7 +57,9 @@
                 return
             }
             const data = await response.json()
-            document.querySelector(".profile .username").textContent = data.username
+            document.querySelectorAll(".username").forEach(element => {
+                element.textContent = data.username
+            });
         }
         init()
     </script>

@@ -1,0 +1,41 @@
+body {
+    background-color: rgb(138, 185, 255);
+}
+
+#tela1 {
+    margin-bottom: 5%;
+}
+
+
+#header {
+    display: grid;
+    place-content: center;
+
+    height: 10vh;
+    width: 95vw;
+    background-color: rgb(184, 235, 255);
+    border: 2px solid black;
+    font-size: clamp(1px, 5vmin, 60px);
+}
+
+#menu {
+    height: 50vh;
+    width: 40vw;
+    background-color: rgb(184, 235, 255);
+    border: 2px solid black;
+
+}
+
+#opcoes-container {
+    display: flex;
+    gap: 15%;
+    flex-direction: row;
+
+}
+
+#planosExistentes {
+    height: 50vh;
+    width: 40vw;
+    background-color: rgb(184, 235, 255);
+    border: 2px solid black;
+}
